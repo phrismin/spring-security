@@ -3,6 +3,8 @@ package com.example.springsecurity.rest;
 import com.example.springsecurity.model.Developer;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -10,18 +12,18 @@ import java.util.stream.Stream;
 @RequestMapping("/api/v1/developers")
 public class DeveloperRestControllerV1 {
 
-    private List<Developer> DEVELOPERS = Stream.of(
-            new Developer(1L, "Ivan", "Ivanov"),
-            new Developer(2L, "Sergey", "Sergeev"),
-            new Developer(3L, "Petr", "Petrov")
-    ).toList();
+    private List<Developer> DEVELOPERS = new ArrayList<>(Arrays.asList(
+            new Developer(1, "Ivan", "Ivanov"),
+            new Developer(2, "Sergey", "Sergeev"),
+            new Developer(3, "Petr", "Petrov")
+    ));
 
     @GetMapping("/{id}")
-    public Developer getById(@PathVariable Long id) {
+    public Developer getById(@PathVariable Integer id) {
         return DEVELOPERS.stream()
                 .filter(developer -> developer.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("ASAAAAAAAAAAAAAA"));
     }
 
     @PostMapping("/create")
@@ -31,7 +33,7 @@ public class DeveloperRestControllerV1 {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public void deleteById(@PathVariable Integer id) {
         DEVELOPERS.removeIf(developer -> developer.getId().equals(id));
     }
 
